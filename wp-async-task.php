@@ -128,8 +128,8 @@ if ( ! class_exists( 'WP_Async_Task' ) ) {
 		public function launch_on_shutdown() {
 			if ( ! empty( $this->_body_data ) ) {
 				$cookies = array();
-				foreach ( $_COOKIE as $name => $value ) {
-					$cookies[] = "$name=" . urlencode( is_array( $value ) ? serialize( $value ) : $value );
+				foreach ( $_COOKIE as $name => $value ) { // input var ok
+					$cookies[] = "$name=" . rawurlencode( is_array( $value ) ? serialize( $value ) : $value );
 				}
 
 				$request_args = array(
@@ -157,7 +157,7 @@ if ( ! class_exists( 'WP_Async_Task' ) ) {
 		 * @uses wp_die()
 		 */
 		public function handle_postback() {
-			if ( isset( $_POST['_nonce'] ) && $this->verify_async_nonce( $_POST['_nonce'] ) ) {
+			if ( isset( $_POST['_nonce'] ) && $this->verify_async_nonce( sanitize_text_field( wp_unslash( $_POST['_nonce'] ) ) ) ) { // input var ok
 				if ( ! is_user_logged_in() ) {
 					$this->action = "nopriv_$this->action";
 				}
@@ -201,12 +201,12 @@ if ( ! class_exists( 'WP_Async_Task' ) ) {
 			$i      = wp_nonce_tick();
 
 			// Nonce generated 0-12 hours ago
-			if ( substr( wp_hash( $i . $action . get_class( $this ), 'nonce' ), - 12, 10 ) == $nonce ) {
+			if ( substr( wp_hash( $i . $action . get_class( $this ), 'nonce' ), - 12, 10 ) === $nonce ) {
 				return 1;
 			}
 
 			// Nonce generated 12-24 hours ago
-			if ( substr( wp_hash( ( $i - 1 ) . $action . get_class( $this ), 'nonce' ), - 12, 10 ) == $nonce ) {
+			if ( substr( wp_hash( ( $i - 1 ) . $action . get_class( $this ), 'nonce' ), - 12, 10 ) === $nonce ) {
 				return 2;
 			}
 
