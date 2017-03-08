@@ -155,6 +155,8 @@ if ( ! class_exists( 'WP_Async_Task' ) ) {
 		 * @uses is_user_logged_in()
 		 * @uses add_filter()
 		 * @uses wp_die()
+		 * @uses sanitize_text_field()
+		 * @uses wp_unslash()
 		 */
 		public function handle_postback() {
 			if ( isset( $_POST['_nonce'] ) && $this->verify_async_nonce( sanitize_text_field( wp_unslash( $_POST['_nonce'] ) ) ) ) { // input var ok
