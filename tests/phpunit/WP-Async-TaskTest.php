@@ -226,7 +226,8 @@ class WP_Async_Task_Tests extends TestCase {
 			die();
 		} );
 		WP_Mock::wpFunction( 'wp_die', array( 'times' => 1 ) );
-
+		WP_Mock::wpPassthruFunction( 'sanitize_text_field' );
+		WP_Mock::wpPassthruFunction( 'wp_unslash' );
 		/** @var Async $async */
 		$async->handle_postback();
 
