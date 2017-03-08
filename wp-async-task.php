@@ -157,7 +157,7 @@ if ( ! class_exists( 'WP_Async_Task' ) ) {
 		 * @uses wp_die()
 		 */
 		public function handle_postback() {
-			if ( isset( $_POST['_nonce'] ) && $this->verify_async_nonce( sanitize_text_field( wp_unslash( $_POST['_nonce'] ) ) ) ) { // input var ok
+			if ( isset( $_POST['_nonce'] ) && $this->verify_async_nonce( $_POST['_nonce'] ) ) { // input var ok
 				if ( ! is_user_logged_in() ) {
 					$this->action = "nopriv_$this->action";
 				}
